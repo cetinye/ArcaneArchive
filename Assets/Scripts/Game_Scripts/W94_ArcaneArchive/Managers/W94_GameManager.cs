@@ -52,7 +52,7 @@ public class W94_GameManager : MonoBehaviour
 
     public void CheckStuck()
     {
-        if (levelManager.IsShelvesFull())
+        if (levelManager.isShelvesFull())
             Finish();
     }
 

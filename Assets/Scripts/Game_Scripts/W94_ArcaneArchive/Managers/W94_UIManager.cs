@@ -4,17 +4,22 @@ using DG.Tweening;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using System.Collections.Generic;
 using System;
 
 public class W94_UIManager : MonoBehaviour
 {
-    [SerializeField] private float remainingTime;
-    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private int remainingTime;
     [SerializeField] private Image blackScreen;
     [SerializeField] private Image frameLower;
     [SerializeField] private Image frameOuter;
+    [SerializeField] private Image candle;
+    [SerializeField] private List<Sprite> candleSprites = new List<Sprite>();
+
     private float time;
     private bool lockFlag = true;
+    private int candleIndex = 0;
+    private bool isCandleStarted = false;
 
     [Header("Intro variables")]
     [SerializeField] private VideoPlayer videoPlayer;
@@ -38,14 +43,29 @@ public class W94_UIManager : MonoBehaviour
     {
         time -= Time.deltaTime;
 
-        timeText.text = time.ToString("00");
-
         if (time <= 0 && lockFlag)
         {
             lockFlag = false;
             StartCoroutine(TimesUp());
+            CancelInvoke();
+        }
+
+        if (!isCandleStarted)
+        {
+            isCandleStarted = true;
+            InvokeRepeating(nameof(UpdateCandleRoutine), 1f / 5f, 1f / 5f);
         }
     }
+
+    private void UpdateCandleRoutine()
+    {
+        if (candleSprites[candleIndex] != null)
+        {
+            candle.sprite = candleSprites[candleIndex];
+            candleIndex++;
+        }
+    }
+
     IEnumerator TimesUp()
     {
         W94_GameManager.instance.state = W94_GameManager.GameState.idle;

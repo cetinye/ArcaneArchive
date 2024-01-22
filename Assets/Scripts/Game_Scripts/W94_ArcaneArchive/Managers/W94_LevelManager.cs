@@ -144,7 +144,7 @@ public class W94_LevelManager : MonoBehaviour
         spawnedBooks.Clear();
     }
 
-    public bool IsShelvesFull()
+    public bool isShelvesFull()
     {
         for (int i = 0; i < frontSlots.Count; i++)
         {
