@@ -31,12 +31,12 @@ public class W94_LevelManager : MonoBehaviour
 
     public void GetLevel()
     {
-        levelSO = levelSOList[levelIndex];
+        levelSO = levelSOList[levelIndex - 1];
     }
 
     public W94_LevelSO GetLevelSO()
     {
-        levelSO = levelSOList[levelIndex];
+        levelSO = levelSOList[levelIndex - 1];
         return levelSO;
     }
 

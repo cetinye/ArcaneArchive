@@ -45,6 +45,7 @@ public class W94_GameManager : MonoBehaviour
     {
         if (levelManager.GetActiveBookCount() == 0)
         {
+            state = GameState.idle;
             W94_AudioManager.instance.PlayOneShot("Success");
             levelManager.StartEndAnim();
         }

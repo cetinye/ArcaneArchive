@@ -11,6 +11,7 @@ public class W94_UIManager : MonoBehaviour
 {
     [SerializeField] private int remainingTime;
     [SerializeField] private Image blackScreen;
+    [SerializeField] private Image candleoutScreen;
     [SerializeField] private Image frameLower;
     [SerializeField] private Image frameOuter;
     [SerializeField] private Image candle;
@@ -20,6 +21,10 @@ public class W94_UIManager : MonoBehaviour
     private bool lockFlag = true;
     private int candleIndex = 0;
     private bool isCandleStarted = false;
+
+    private float flashInterval = 0.5f;
+    private bool isFlashable = true;
+    private bool isCandleoutStarted = false;
 
     [Header("Intro variables")]
     [SerializeField] private VideoPlayer videoPlayer;
@@ -43,7 +48,20 @@ public class W94_UIManager : MonoBehaviour
     {
         time -= Time.deltaTime;
 
-        if (time <= 0 && lockFlag)
+        //if (time <= 5.2f && isFlashable)
+        //{
+        //    isFlashable = false;
+        //    W94_GameManager.instance.PlayFx("Countdown", 0.7f, 1f);
+        //    FlashRed();
+        //}
+
+        if (time <= 30f && !isCandleoutStarted)
+        {
+            isCandleoutStarted = true;
+            candleoutScreen.DOFade(0.7f, 30f).SetEase(Ease.Linear);
+        }
+
+        if (time < 0 && lockFlag)
         {
             lockFlag = false;
             StartCoroutine(TimesUp());
@@ -74,8 +92,8 @@ public class W94_UIManager : MonoBehaviour
         W94_AudioManager.instance.Play("TimesUp");
 
         blackScreen.gameObject.SetActive(true);
-        blackScreen.DOFade(1, 4);
-        blackScreen.transform.GetChild(0).GetComponent<TextMeshProUGUI>().DOFade(1, 4);
+        blackScreen.DOFade(1, 2);
+        blackScreen.transform.GetChild(0).GetComponent<TextMeshProUGUI>().DOFade(1, 2);
         yield return new WaitForSeconds(4f);
 
         W94_GameManager.instance.Finish();
@@ -100,6 +118,19 @@ public class W94_UIManager : MonoBehaviour
 
         frameLower.transform.SetAsLastSibling();
         frameOuter.transform.SetAsLastSibling();
+    }
+
+    private void FlashRed()
+    {
+        Sequence redFlash = DOTween.Sequence();
+
+        redFlash.Append(candle.DOColor(Color.red, flashInterval))
+                .SetEase(Ease.Linear)
+                .Append(candle.DOColor(Color.white, flashInterval))
+                .SetEase(Ease.Linear)
+                .SetLoops(6);
+
+        redFlash.Play();
     }
 
     #region Intro
